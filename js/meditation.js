@@ -18,33 +18,39 @@ timeDisplay.textContent = `${Math.floor(fakeDuration / 60)}:${Math.floor(
   fakeDuration % 60
 )}`;
 
-sounds.forEach(sound => {
-  sound.addEventListener("click", function() {
+sounds.forEach((sound) => {
+  sound.addEventListener("click", function () {
     song.src = this.getAttribute("data-sound");
     video.src = this.getAttribute("data-video");
-    checkPlaying(song);
+
+    // Restart everything fresh
+    song.pause();
+    song.currentTime = 0;
+    video.pause();
+    video.currentTime = 0;
+
+    play.src = "../assets/images/play.svg"; // Update to show pause
+    song.play();
+    video.play();
   });
 });
 
-play.addEventListener("click", function() {
+play.addEventListener("click", function () {
   checkPlaying(song);
 });
 
-replay.addEventListener("click", function() {
-    restartSong(song);
-    
-  });
+replay.addEventListener("click", function () {
+  restartSong(song);
+});
 
+const restartSong = (song) => {
+  let currentTime = song.currentTime;
+  song.currentTime = 0;
+  console.log("ciao");
+};
 
-const restartSong = song =>{
-    let currentTime = song.currentTime;
-    song.currentTime = 0;
-    console.log("ciao")
-
-}
-
-timeSelect.forEach(option => {
-  option.addEventListener("click", function() {
+timeSelect.forEach((option) => {
+  option.addEventListener("click", function () {
     fakeDuration = this.getAttribute("data-time");
     timeDisplay.textContent = `${Math.floor(fakeDuration / 60)}:${Math.floor(
       fakeDuration % 60
@@ -52,19 +58,19 @@ timeSelect.forEach(option => {
   });
 });
 
-const checkPlaying = song => {
+const checkPlaying = (song) => {
   if (song.paused) {
     song.play();
     video.play();
-    play.src = "./svg/pause.svg";
+    play.src = "../assets/images/pause.svg";
   } else {
     song.pause();
     video.pause();
-    play.src = "./svg/play.svg";
+    play.src = "../assets/images/play.svg";
   }
 };
 
-song.ontimeupdate = function() {
+song.ontimeupdate = function () {
   let currentTime = song.currentTime;
   let elapsed = fakeDuration - currentTime;
   let seconds = Math.floor(elapsed % 60);
@@ -76,7 +82,7 @@ song.ontimeupdate = function() {
   if (currentTime >= fakeDuration) {
     song.pause();
     song.currentTime = 0;
-    play.src = "./svg/play.svg";
+    play.src = "../assets/images/play.svg";
     video.pause();
   }
 };
